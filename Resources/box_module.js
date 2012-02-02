@@ -144,6 +144,17 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
  */
 BOXModule.prototype.showAuthorizeUI = function(pUrl) {
 
+var actInd = Titanium.UI.createActivityIndicator({
+    height:50,
+    width:210,
+    top:100,
+    color:'black',
+    message:'Loading...',
+    zIndex:100,
+    font : {fontFamily:'Helvetica Neue', fontSize:15,fontWeight:'bold'},
+    style : Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+});
+
 	var that = this;
 	window = Ti.UI.createWindow({
 		//modal : true,
@@ -177,10 +188,13 @@ BOXModule.prototype.showAuthorizeUI = function(pUrl) {
 
 			that.authorizeUICallback.call(that, e);
 			webView.stopLoading = true;
+		} else {
+			actInd.show();
 		}
 	});
 	webView.addEventListener('load', function(e) {
 		that.authorizeUICallback.call(that, e);
+		actInd.hide();
 	});
 
 	closeLabel.addEventListener('click', function(e) {
@@ -207,7 +221,7 @@ BOXModule.prototype.destroyAuthorizeUI = function() {
 		Ti.API.debug('destroyAuthorizeUI:webView.removeEventListener');
 		webView.removeEventListener('load', that.authorizeUICallback);
 		Ti.API.debug('destroyAuthorizeUI:window.close()');
-		window.hide();
+		window.close();
 	} catch(ex) {
 		Ti.API.debug('Cannot destroy the authorize UI. Ignoring.');
 	}
@@ -230,8 +244,14 @@ BOXModule.prototype.authorizeUICallback = function(e) {
 				access_token : that.ACCESS_TOKEN,
 			});
 		}
+		
+		setTimeout(function() {
+					that.destroyAuthorizeUI();
+					webView = null;
+					win = null;
+				}, 15000);
 
-		that.destroyAuthorizeUI();
+		
 
 	} else if('https://www.box.net/' === e.url) {
 		that.destroyAuthorizeUI();
