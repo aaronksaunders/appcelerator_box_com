@@ -69,7 +69,7 @@ tabGroup.open();
 // create the module
 var B = require('box_module').BOXModule;
 // api_key & callback_url
-var BOXModule = new B('aeu2bzzrh76crhsbggx1nzubc4p37ou0', 'http://www.clearlyinnovative.com/oAuth.html');
+var BOXModule = new B('API KEY', 'http://www.clearlyinnovative.com/oAuth.html');
 
 // login and on success dump the file in the root
 BOXModule.login(dump_files);

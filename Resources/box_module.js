@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 BOXModule = function(api_key, redirectUri) {
-	this.api_key = api_key || 'aeu2bzzrh76crhsbggx1nzubc4p37ou0';
-	this.redirectUri = redirectUri || 'http://www.clearlyinnovative.com/oAuth.html';
+	this.api_key = api_key || 'MISSING API KEY';
+	this.redirectUri = redirectUri || 'MISSING CALLBACK URL';
 	this.ACCESS_TOKEN = null;
 	this.xhr = null;
 	this.API_URL = "https://www.box.net/api/1.0/rest?action=";
