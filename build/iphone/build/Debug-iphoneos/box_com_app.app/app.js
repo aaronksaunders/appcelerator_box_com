@@ -1,1 +1,0 @@
-/Users/aaronksaunders/Documents/squarechic/box_com_app/Resources/app.js
