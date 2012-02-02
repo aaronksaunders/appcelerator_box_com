@@ -96,7 +96,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			that.xhr = Titanium.Network.createHTTPClient();
 		}
 
-		var url = that.API_URL + method + "?api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
+		var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
 
 		// add params
 		var paramMap = params || {};
@@ -105,6 +105,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 		}
 
 		// open client
+		Ti.API.debug('API call URL: '+url);
 		that.xhr.open("GET", url);
 
 		that.xhr.onerror = function(e) {
@@ -119,7 +120,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 		};
 
 		BOXModule.xhr.onload = function(_xhr) {
-			Ti.API.debug("BOXModule response: " + that.xhr.responseText);
+			//Ti.API.debug("BOXModule response: " + that.xhr.responseText);
 			var xmlDocument = Ti.XML.parseString(that.xhr.responseText);
 			if(callback !== null) {
 				callback({
@@ -245,11 +246,7 @@ BOXModule.prototype.authorizeUICallback = function(e) {
 			});
 		}
 		
-		setTimeout(function() {
-					that.destroyAuthorizeUI();
-					webView = null;
-					win = null;
-				}, 15000);
+		that.destroyAuthorizeUI();
 
 		
 

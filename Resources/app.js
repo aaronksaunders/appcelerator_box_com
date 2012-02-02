@@ -9,7 +9,8 @@ var tabGroup = Titanium.UI.createTabGroup();
 //
 var win1 = Titanium.UI.createWindow({
 	title : 'Tab 1',
-	backgroundColor : '#fff'
+	backgroundColor : '#fff',
+	layout: 'vertical'
 });
 var tab1 = Titanium.UI.createTab({
 	icon : 'KS_nav_views.png',
@@ -17,18 +18,51 @@ var tab1 = Titanium.UI.createTab({
 	window : win1
 });
 
-var label1 = Titanium.UI.createLabel({
-	color : '#999',
-	text : 'I am Window 1',
-	font : {
-		fontSize : 20,
-		fontFamily : 'Helvetica Neue'
-	},
-	textAlign : 'center',
-	width : 'auto'
-});
+var createFolder = Ti.UI.createButton({
+	title:"Create Folder",
+	width:"200dp",
+	height: '50dp',
+	top: '20dp'
+})
 
-win1.add(label1);
+var listFolders = Ti.UI.createButton({
+	title:"List Folder",
+	width:"200dp",
+	height: '50dp',
+	top: '20dp'
+})
+
+createFolder.addEventListener('click',function(){
+	// Creating a new folder
+	Ti.API.debug('create_folder:');
+	BOXModule.callMethod("create_folder", {
+		"name" : "API Folder 2",
+		"share" : "1",
+		"parent_id":"0"
+	}, function(data) {
+		Ti.API.debug(data);
+	});
+})
+
+/// List all folders
+listFolders.addEventListener('click',function(){
+	Ti.API.debug('dump_files:');
+	BOXModule.callMethod("get_account_tree", {
+		"folder_id" : "0", // 0 == root directory
+		"params[]" : "nozip",
+	}, function(data) {
+		/*var xmlDocument = Ti.XML.parseString(data.responseText);
+		var tree = xmlDocument.getElementsByTagName('tree');
+		alert(tree[0].item(0).text);
+		for(var i=0;i<folders.length;i++){
+			alert(folders[i].item(0).text)
+		}
+		*/
+	});
+})
+
+win1.add(createFolder);
+win1.add(listFolders);
 
 //
 // create controls tab and root window
@@ -69,16 +103,20 @@ tabGroup.open();
 // create the module
 var B = require('box_module').BOXModule;
 // api_key & callback_url
-var BOXModule = new B('API KEY', 'http://www.clearlyinnovative.com/oAuth.html');
+var BOXModule = new B('aeu2bzzrh76crhsbggx1nzubc4p37ou0', 'http://www.clearlyinnovative.com/oAuth.html');
 
-// login and on success dump the file in the root
-BOXModule.login(dump_files);
+
+BOXModule.login(function(){
+	Ti.API.debug('Loged in.')
+});
 
 function dump_files() {
+	Ti.API.debug('dump_files:');
 	BOXModule.callMethod("get_account_tree", {
 		"folder_id" : "0", // 0 == root directory
 		"params[]" : "simple"
 	}, function(data) {
-		Ti.API.debug(data);
+		var xmlDoc = Ti.XML.parseString(data);
+		alert(xmlDoc.documentElement.getAttribute("rows"))
 	});
 }
