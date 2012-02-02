@@ -169,7 +169,7 @@ BOXModule.prototype.showAuthorizeUI = function(pUrl) {
 		touchEnabled : true,
 		width : '100%',
 		url : pUrl,
-		autoDetect : [Ti.UI.iOS.AUTODETECT_NONE]
+		autoDetect : (Ti.Platform.osname!=='android') ? [Ti.UI.iOS.AUTODETECT_NONE] : '',
 	});
 	webView.addEventListener('beforeload', function(e) {
 		if(e.url.indexOf(that.redirectUri) != -1 || e.url.indexOf('https://www.box.net/') != -1) {
