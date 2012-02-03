@@ -119,7 +119,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			}
 		};
 
-		BOXModule.xhr.onload = function(_xhr) {
+		that.xhr.onload = function(_xhr) {
 			//Ti.API.debug("BOXModule response: " + that.xhr.responseText);
 			var xmlDocument = Ti.XML.parseString(that.xhr.responseText);
 			if(callback !== null) {
@@ -131,7 +131,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			}
 		};
 
-		BOXModule.xhr.send();
+		that.xhr.send();
 	} catch(err) {
 		Titanium.UI.createAlertDialog({
 			title : "Error",
@@ -168,7 +168,7 @@ var actInd = Titanium.UI.createActivityIndicator({
 		textAlign : 'right',
 		font : {
 			fontWeight : 'bold',
-			fontSize : '12pt'
+			fontSize : '12px'
 		},
 		text : '(X)',
 		top : 5,
@@ -246,7 +246,13 @@ BOXModule.prototype.authorizeUICallback = function(e) {
 			});
 		}
 		
-		that.destroyAuthorizeUI();
+		Ti.API.debug('Access Token: '+that.ACCESS_TOKEN);
+		if(Ti.Platform.osname==='android'){
+			setTimeout(function() { that.destroyAuthorizeUI() }, 500);
+		} else{
+			that.destroyAuthorizeUI();
+		}
+		//
 
 		
 

@@ -1,0 +1,30 @@
+Logfile initialized
+[INFO] logfile = /home/freddy/git/appcelerator_box_com/build.log
+[DEBUG] /home/freddy/.titanium/mobilesdk/linux/1.8.0.1/android/builder.py simulator box_com_app /home/freddy/android-sdk /home/freddy/git/appcelerator_box_com ci.boxcomapp 9 WQVGA432 
+[INFO] Building box_com_app for Android ... one moment
+[INFO] Titanium SDK version: 1.8.0.1 (12/22/11 13:09 fbdc96f)
+[DEBUG] Waiting for device to be ready ...
+[TRACE] adb devices returned 2 devices/emulators
+[DEBUG] Device connected... (waited 0 seconds)
+[DEBUG] waited 0.003338 seconds on emulator to get ready
+[DEBUG] ci.boxcomapp installed? True
+[INFO] Fastdev server running, deploying in Fastdev mode
+[INFO] Copying project resources..
+[TRACE] COPYING MODIFIED FILE: /home/freddy/git/appcelerator_box_com/Resources/app.js => /home/freddy/git/appcelerator_box_com/build/android/bin/assets/Resources/app.js
+[INFO] Tiapp.xml unchanged, skipping class generation
+[DEBUG] Processing Android resource drawables
+[DEBUG] found drawable-notlong-land-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-land-hdpi/default.png
+[DEBUG] found drawable-notlong-port-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-port-hdpi/default.png
+[DEBUG] found drawable-notlong-land-ldpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-land-ldpi/default.png
+[DEBUG] found drawable-notlong-port-mdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-port-mdpi/default.png
+[DEBUG] found drawable-long-port-ldpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-long-port-ldpi/default.png
+[DEBUG] found drawable-long-land-ldpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-long-land-ldpi/default.png
+[DEBUG] found drawable-notlong-port-ldpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-port-ldpi/default.png
+[DEBUG] found drawable-long-land-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-long-land-hdpi/default.png
+[DEBUG] found drawable-long-port-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-long-port-hdpi/default.png
+[DEBUG] found drawable-notlong-land-mdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-land-mdpi/default.png
+[INFO] Waiting for SDCard to become available..
+[INFO] Re-launching application ... box_com_app
+[INFO] Launching application ... box_com_app
+[TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=ci.boxcomapp/.Box_com_appActivity }
+
