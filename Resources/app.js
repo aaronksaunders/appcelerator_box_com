@@ -86,6 +86,8 @@ var uploadFile = createCustomButton('upload','Upload File');
 
 createFolder.addEventListener('click',function(){
 	// Creating a new folder
+	createNewFolderDialog();
+	return;
 	Ti.API.debug('create_folder:');
 	BOXModule.callMethod("create_folder", {
 		"name" : "API Folder 2",
@@ -386,13 +388,17 @@ function dump_files() {
 	});
 }
 
-function createFolderDialog(){
+function createNewFolderDialog(){
 	var view = Ti.UI.createView({
-		width: '100%',
-		height: '100%',
-		backgroundColor: 'red'
+		width: '200dp',
+		height: '400dp',
+		backgroundColor: 'red',
+		top: 0
 	})
-	return view;
+	
+	//return view;
+	
+	win1.add(view);
 }
 
 /*
@@ -403,21 +409,21 @@ function createCustomButton(icon_name,name){
 	var button = Ti.UI.createView({
 		layout: 'vertical',
 		width: 65,
-		height: 50,
+		height: 55,
 		touchEnabled: true,
-		borderColor: '#eee',
-		borderRadius: 4,
+		borderColor: '#ccc',
+		borderRadius: 6,
 		borderWidth: 1,
 		left: 5,
-		backgroundColor: '#fff'
+		backgroundColor: '#F8F8F8'
 	})
 	//Ti.API.debug(icon_name)
 	var icon = Ti.UI.createImageView({
 		url: './images/buttons/'+icon_name+'.png',
 		width: 32,
 		height: 32,
-		top: 0,
-		left:15
+		top: 4,
+		left:16
 	})
 	
 	var label = Ti.UI.createLabel({
