@@ -110,12 +110,10 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 
 		// add params
 		var paramMap = params || {};
-		if(!IS_POST_REQUEST)
+		if(!IS_POST_REQUEST){
 			for(var a in paramMap) {
 				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
 			}
-		else{
-			
 		}
 
 		// open client
@@ -146,6 +144,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			//Ti.API.debug("BOXModule response: " + that.xhr.responseText);
 			var xmlDocument = Ti.XML.parseString(that.xhr.responseText);
 			if(callback !== null) {
+				Ti.API.debug('Success Callback..')
 				callback({
 					"success" : true,
 					"error" : null,
@@ -215,8 +214,9 @@ var actInd = Titanium.UI.createActivityIndicator({
 	webView.addEventListener('beforeload', function(e) {
 		if(e.url.indexOf(that.redirectUri) != -1 || e.url.indexOf('https://www.box.net/') != -1) {
 			Titanium.API.debug(e);
-
-			that.authorizeUICallback.call(that, e);
+			
+			/// Freddy: This line was causing the login callback function from app.js to be called twice
+			//that.authorizeUICallback.call(that, e);
 			webView.stopLoading = true;
 		} else {
 			actInd.show();
