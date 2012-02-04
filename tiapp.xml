@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>1.9.0.v20120127003134</sdk-version>
+    <sdk-version>1.8.1</sdk-version>
     <id>ci.boxcomapp</id>
     <name>box_com_app</name>
     <version>1.0</version>
