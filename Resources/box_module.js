@@ -65,8 +65,8 @@ BOXModule.prototype.getTicket = function(callback) {
 		that.xhr.onerror = function(e) {
 			Ti.API.error("BOXModule ERROR " + e.error);
 			Ti.API.error("BOXModule ERROR " + that.xhr.location);
-			if(error) {
-				error(e);
+			if(e.error) {
+				alert("Please make sure you are connected to the internet");
 			}
 		};
 

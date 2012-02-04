@@ -2,8 +2,8 @@
 Titanium.UI.setBackgroundColor('#000');
 
 /// This should be on the globals.js file 
-var folders = [];
-
+var current_folder = 0;
+var history = [];
 
 //
 // create base UI tab and root window
@@ -17,12 +17,13 @@ var toolbarView = Ti.UI.createView({
 
 
 var tableHeader = Ti.UI.createView({
-	height:'50dp',
-	width:'100%'
+	height:'25dp',
+	width:'100%',
+	layout:'horizontal'
 })
 
 var folderList = Ti.UI.createTableView({
-	height: '100%',
+	height: 'auto',
 	data: [{title:'Empty',hasChild:false}],
 	header: tableHeader,
 	style: Ti.UI.iPhone.TableViewStyle.GROUPED,
@@ -73,6 +74,7 @@ var uploadFile = Ti.UI.createButton({
 	top: 0
 })
 
+var upFolder = createCustomButton('up','Up');
 var createFolder = createCustomButton('add','New Folder');
 var refreshFolder = createCustomButton('refresh','Refresh');
 var uploadFile = createCustomButton('upload','Upload File');
@@ -95,7 +97,13 @@ createFolder.addEventListener('click',function(){
 })
 
 refreshFolder.addEventListener('click',function(){
-	dumpFolderContents();
+	dumpFolderContents(current_folder);
+})
+
+upFolder.addEventListener('click',function(){
+	if(history.length>0){
+		dumpFolderContents(history.pop(),true);
+	}
 })
 
 /*
@@ -115,11 +123,11 @@ uploadFile.addEventListener('click',function(){
 				"share" : "0",
 				"message" : "Uploaded using API",
 				// Uploading to the root directory for now
-				"folder_id" : "0"
+				"folder_id" : current_folder
 			}, function(data) {
 				if(data.success){
 					Ti.API.debug(JSON.stringify(data));
-					dumpFolderContents("0");
+					dumpFolderContents(current_folder);
 				}
 			});
             
@@ -157,16 +165,18 @@ var viewCurrentFolder = Ti.UI.createView({
 	height:'20dp'
 })
 
-viewCurrentFolder.add(labelCurrentFolder);
-viewCurrentFolder.add(labelCurrentFolderName);
+tableHeader.add(labelCurrentFolder);
+tableHeader.add(labelCurrentFolderName);
 
 win1.add(labelTitle);
-tableHeader.add(createFolder);
-tableHeader.add(refreshFolder);
+toolbarView.add(upFolder);
+toolbarView.add(createFolder);
+toolbarView.add(refreshFolder);
 toolbarView.add(uploadFile);
-toolbarView.show();
+
 win1.add(toolbarView);
-win1.add(viewCurrentFolder);
+win1.add(tableHeader);
+//win1.add(viewCurrentFolder);
 win1.add(folderList);
 win1.open();
 
@@ -178,25 +188,23 @@ var BOXModule = new B('aeu2bzzrh76crhsbggx1nzubc4p37ou0', 'http://www.clearlyinn
 
 BOXModule.login(function(){
 	Ti.API.debug('Loged in.');
-	/*if(Ti.Platform.osname==='android'){
-		setTimeout(dumpFolderContents,1000)
-	} else
-		dumpFolderContents("0");
-		*/
-		dumpFolderContents();
-	//setTimeout(dumpFolderContents,1000)
+	dumpFolderContents();
 });
 
-function dumpFolderContents(_folder_id){
-	//var pDialog = createActivityWindow('Loading Folders');
-	
-	
+function dumpFolderContents(_folder_id,backwards){
+
 	var find_by_folder_id = _folder_id || BOXModule.ROOT_FOLDER_ID;
+	
+	if ( ( find_by_folder_id != BOXModule.ROOT_FOLDER_ID ) && (!backwards) ){
+		history.push(current_folder);
+	}
+	
 	Ti.API.debug('dump_files: Geting conotents of folder: ' + find_by_folder_id);
 	BOXModule.callMethod("get_account_tree", {
 		"folder_id" : find_by_folder_id, // 0 == root directory
 		"params[]" : ['nozip','onelevel']
 	}, function(data) {
+		current_folder = find_by_folder_id;
 		var pDialog = createActivityWindow('Loading...');
 		pDialog.show();
 		
@@ -204,27 +212,28 @@ function dumpFolderContents(_folder_id){
 		pDialog.setMessage("Loading Folders");
 		var xmlDoc = xmlToJson(Ti.XML.parseString(data.responseText));
 		var root_folder = xmlDoc['response']['tree']['folder'];
-		//Ti.API.debug(JSON.stringify(root_folder));
+		Ti.API.debug("Root Folder: "+JSON.stringify(root_folder));
 		
-		var folders = (root_folder['folders']['folder']) ? root_folder['folders']['folder'] : {};
+		var folders = (root_folder['folders']) ? root_folder['folders']['folder'] : {};
 		
 		var files = {}
+		
 		if(root_folder['files'])
 			files = root_folder['files']['file'];
 		
-		/// Getting all the folders
+		/// Setting folder name on label
 		if(find_by_folder_id === BOXModule.ROOT_FOLDER_ID)
 			labelCurrentFolderName.setText('Root');
 		else 
-			;
-			//labelCurrentFolderName.setText(root_folder['folder']['name']);
-			
+			labelCurrentFolderName.setText(root_folder['@attributes']['name']);
+		
 		var rows = [];
 		for (var folder in folders){
-			
-			var folderId = folders[folder]['@attributes']['id'];
-			var folderName = folders[folder]['@attributes']['name'] ;
-			var shared = folders[folder]['@attributes']['shared'];			 
+			Ti.API.debug("Subfolder: "+JSON.stringify(folders[folder]))
+			//if()
+			var folderId = (folders.length) ? folders[folder]['@attributes']['id'] : folders[folder]['id'];
+			var folderName = (folders.length) ? folders[folder]['@attributes']['name'] : folders[folder]['name'] ;
+			var shared = (folders.length) ? (folders[folder]['@attributes']['shared']==1) : (folders[folder]['shared']==1);
 			
 			Ti.API.debug(JSON.stringify(folders[folder]))
 			var row = Titanium.UI.createTableViewRow({
@@ -258,29 +267,11 @@ function dumpFolderContents(_folder_id){
 				font: { fontSize: '14px', fontWeight:'bold'}
 			})
 			
-			/*folderView.add(Ti.UI.createImageView({
-					url: '/images/folder.png',
-					width: 48,
-					height: 48,
-					left: 2
-				})
-			)*/
-			
 			folderView.add(icon);
 			folderView.add(folderName);
-			
-			/*rows.push({
-				title:folders[folder]['@attributes']['name'],'class':'subFolder', 
-				id:folders[folder]['@attributes']['id'],
-				is_folder: true 
-			})*/
 			row.add(folderView);
 			rows.push(row)
 		}
-		//folderList.setData(rows);
-		//return ;
-		//progess.setText('Loading Files');
-		/// Getting all files inside the folder
 		pDialog.setMessage("Loading Files");
 		for (var file in files){
 			
@@ -314,34 +305,15 @@ function dumpFolderContents(_folder_id){
 				font: { fontSize: '14px', fontWeight:'bold'}
 			})
 			
-			/*folderView.add(Ti.UI.createImageView({
-					url: '/images/folder.png',
-					width: 48,
-					height: 48,
-					left: 2
-				})
-			)*/
-			
 			fileView.add(icon);
 			fileView.add(fileName);
-			
-			/*rows.push({
-				title:folders[folder]['@attributes']['name'],'class':'subFolder', 
-				id:folders[folder]['@attributes']['id'],
-				is_folder: true 
-			})*/
 			row.add(fileView);
 			rows.push(row)
-			
-			
-			/*rows.push({
-				title: files[file]['@attributes']['file_name'],
-				id: files[file]['@attributes']['id'],
-				is_folder: false
-			})*/
 		}
-		
-		folderList.setData(rows);
+		if(rows.length > 0)
+			folderList.setData(rows);
+		else
+			folderList.setData({title:'Empty',hasChild:false})
 		
 		pDialog.hide();
 		
@@ -412,7 +384,7 @@ function createCustomButton(icon_name,name){
 		width: 32,
 		height: 32,
 		top: 0,
-		left:70
+		left:15
 	})
 	
 	var label = Ti.UI.createLabel({
