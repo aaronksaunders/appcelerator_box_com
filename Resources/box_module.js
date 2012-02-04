@@ -20,8 +20,11 @@ BOXModule = function(api_key, redirectUri) {
 	this.ACCESS_TOKEN = null;
 	this.xhr = null;
 	this.API_URL = "https://www.box.net/api/1.0/rest?action=";
+	this.API_UPLOAD_URL = "https://upload.box.net/api/1.0/upload/";
 	this.ticket = null;
 };
+
+BOXModule.prototype.ROOT_FOLDER_ID = "0";
 
 BOXModule.prototype.logout = function() {
 	showAuthorizeUI(String.format('https://foursquare.com/oauth2/authorize?response_type=token&client_id=%s&redirect_uri=%s', BOXModule.clientId, BOXModule.redirectUri));
@@ -88,6 +91,7 @@ BOXModule.prototype.getTicket = function(callback) {
 }
 BOXModule.prototype.callMethod = function(method, params, callback) {
 	var that = this;
+	
 
 	// get the login information and let it roll!!
 	try {
@@ -95,18 +99,37 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 		if(that.xhr == null) {
 			that.xhr = Titanium.Network.createHTTPClient();
 		}
-
-		var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
+		
+		// These three methods use post
+		var IS_POST_REQUEST = (method == 'upload');
+		
+		if(IS_POST_REQUEST){
+			var url = that.API_UPLOAD_URL + that.ACCESS_TOKEN + "/" + params.folder_id;
+		} else 
+			var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
 
 		// add params
 		var paramMap = params || {};
-		for(var a in paramMap) {
-			url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
+		if(!IS_POST_REQUEST)
+			for(var a in paramMap) {
+				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
+			}
+		else{
+			
 		}
 
 		// open client
 		Ti.API.debug('API call URL: '+url);
-		that.xhr.open("GET", url);
+		var paramMap = params || {};
+		if(IS_POST_REQUEST){
+			that.xhr.open("POST", url);
+		} else {
+			// add params
+			for(var a in paramMap) {
+				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
+			}
+			that.xhr.open("GET", url);
+		}
 
 		that.xhr.onerror = function(e) {
 			Ti.API.error("BOXModule ERROR " + e.error);
@@ -130,8 +153,15 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 				});
 			}
 		};
-
-		that.xhr.send();
+		
+		if(IS_POST_REQUEST){
+			Ti.API.debug('Params: ' + JSON.stringify(paramMap))
+			that.xhr.send(paramMap);
+		}
+		else {
+			that.xhr.send();
+		}
+			
 	} catch(err) {
 		Titanium.UI.createAlertDialog({
 			title : "Error",
@@ -152,8 +182,7 @@ var actInd = Titanium.UI.createActivityIndicator({
     color:'black',
     message:'Loading...',
     zIndex:100,
-    font : {fontFamily:'Helvetica Neue', fontSize:15,fontWeight:'bold'},
-    style : Titanium.UI.iPhone.ActivityIndicatorStyle.DARK
+    font : {fontFamily:'Helvetica Neue', fontSize:15,fontWeight:'bold'}
 });
 
 	var that = this;
