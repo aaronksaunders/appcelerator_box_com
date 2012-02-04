@@ -40,6 +40,16 @@ BOXModule.prototype.login = function(authSuccess_callback) {
 
 	var that = this;
 
+	var token = Ti.App.Properties.getString('BOX_ACCESS_TOKEN');
+	if (token){
+		Ti.API.debug('Recovering token: '+token);
+		that.ACCESS_TOKEN =token; 
+		authSuccess_callback.call();
+		return ;
+	}
+	
+	
+
 	if(authSuccess_callback != undefined) {
 		that.success_callback = authSuccess_callback;
 	}
@@ -91,7 +101,6 @@ BOXModule.prototype.getTicket = function(callback) {
 }
 BOXModule.prototype.callMethod = function(method, params, callback) {
 	var that = this;
-	
 
 	// get the login information and let it roll!!
 	try {
@@ -277,6 +286,8 @@ BOXModule.prototype.authorizeUICallback = function(e) {
 	if(e.url.indexOf('auth_token') != -1) {
 		var token = e.url.split("&")[1];
 		that.ACCESS_TOKEN = token.split("=")[1];
+		Ti.App.Properties.setString('BOX_ACCESS_TOKEN',that.ACCESS_TOKEN);
+		Ti.API.debug('Saving token: '+that.ACCESS_TOKEN);
 
 		if(that.success_callback != undefined) {
 			that.success_callback({
