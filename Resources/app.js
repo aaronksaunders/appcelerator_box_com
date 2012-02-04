@@ -15,9 +15,18 @@ var toolbarView = Ti.UI.createView({
 	layout: 'horizontal'
 })
 
+
+var tableHeader = Ti.UI.createView({
+	height:'50dp',
+	width:'100%'
+})
+
 var folderList = Ti.UI.createTableView({
 	height: '100%',
-	data: [{title:'Empty',hasChild:false}]
+	data: [{title:'Empty',hasChild:false}],
+	header: tableHeader,
+	style: Ti.UI.iPhone.TableViewStyle.GROUPED,
+	backgroundColor: '#EFF5F9'
 })
 
 var labelCurrentFolder = Ti.UI.createLabel({
@@ -152,8 +161,8 @@ viewCurrentFolder.add(labelCurrentFolder);
 viewCurrentFolder.add(labelCurrentFolderName);
 
 win1.add(labelTitle);
-toolbarView.add(createFolder);
-toolbarView.add(refreshFolder);
+tableHeader.add(createFolder);
+tableHeader.add(refreshFolder);
 toolbarView.add(uploadFile);
 toolbarView.show();
 win1.add(toolbarView);
@@ -183,11 +192,10 @@ function dumpFolderContents(_folder_id){
 	
 	
 	var find_by_folder_id = _folder_id || BOXModule.ROOT_FOLDER_ID;
-	Ti.API.debug('dump_files:');
+	Ti.API.debug('dump_files: Geting conotents of folder: ' + find_by_folder_id);
 	BOXModule.callMethod("get_account_tree", {
 		"folder_id" : find_by_folder_id, // 0 == root directory
-		"params[]" : "onelevel",
-		"params[]" : "nozip"
+		"params[]" : ['nozip','onelevel']
 	}, function(data) {
 		var pDialog = createActivityWindow('Loading...');
 		pDialog.show();
@@ -214,22 +222,17 @@ function dumpFolderContents(_folder_id){
 		var rows = [];
 		for (var folder in folders){
 			
-			//var folderId = (find_by_folder_id === BOXModule.ROOT_FOLDER_ID) ? folders[folder]['@attributes']['id'] : folders[folder]['id'];
 			var folderId = folders[folder]['@attributes']['id'];
-			//var folderName = (find_by_folder_id === BOXModule.ROOT_FOLDER_ID) ? folders[folder]['@attributes']['name'] : folders[folder]['name'];
 			var folderName = folders[folder]['@attributes']['name'] ;
-			
-			var shared = folders[folder]['@attributes']['shared'];
-			 
-			
-			Ti.API.debug('WTF: '+JSON.stringify(folders[folder]['@attributes']));
+			var shared = folders[folder]['@attributes']['shared'];			 
 			
 			Ti.API.debug(JSON.stringify(folders[folder]))
 			var row = Titanium.UI.createTableViewRow({
 				id:folderId,
 				hasChild: true,
 				touchEnabled: true,
-				isFolder: true
+				isFolder: true,
+				backgroundColor: '#fff',
 			});
 			
 			var folderView = Ti.UI.createView({
@@ -240,7 +243,7 @@ function dumpFolderContents(_folder_id){
 			}) 
 			
 			var icon = Ti.UI.createImageView({
-					image: './images/folder'+ shared +'.png',
+					image: (shared) ? './images/folder_shared.png' : './images/folder.png',
 					width: 32,
 					height: 32,
 					left: 2
@@ -409,7 +412,7 @@ function createCustomButton(icon_name,name){
 		width: 32,
 		height: 32,
 		top: 0,
-		left:16
+		left:70
 	})
 	
 	var label = Ti.UI.createLabel({

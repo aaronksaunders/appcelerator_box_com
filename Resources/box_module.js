@@ -109,25 +109,33 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
 
 		// add params
-		var paramMap = params || {};
+		/*var paramMap = params || {};
 		if(!IS_POST_REQUEST){
 			for(var a in paramMap) {
 				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
 			}
-		}
+		}*/
 
 		// open client
-		Ti.API.debug('API call URL: '+url);
 		var paramMap = params || {};
 		if(IS_POST_REQUEST){
 			that.xhr.open("POST", url);
 		} else {
 			// add params
 			for(var a in paramMap) {
-				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
+				// params[] is a special case
+				if (a == 'params[]') {
+					for(var b in paramMap[a]) {
+						url += '&params[]' + '=' + (paramMap[a][b] ? Titanium.Network.encodeURIComponent(paramMap[a][b]) : "");
+					}
+				} else {
+					url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
+				}
 			}
 			that.xhr.open("GET", url);
 		}
+		
+		Ti.API.debug('API call URL: '+url);
 
 		that.xhr.onerror = function(e) {
 			Ti.API.error("BOXModule ERROR " + e.error);
@@ -194,6 +202,7 @@ var actInd = Titanium.UI.createActivityIndicator({
 	});
 	closeLabel = Ti.UI.createLabel({
 		textAlign : 'right',
+		color: '#000',
 		font : {
 			fontWeight : 'bold',
 			fontSize : '12px'
