@@ -133,37 +133,10 @@ ApplicationController.prototype.dumpFolderContents = function(_folder_id, backwa
 
 		Ti.API.debug('List folders callback');
 		pDialog.setMessage("Loading Folders");
-		var xmlDoc = xmlToJson(Ti.XML.parseString(data.responseText));
+		var xmlDoc = U.xmlToJson(Ti.XML.parseString(data.responseText));
 		var root_folder = xmlDoc.response ? xmlDoc['response']['tree']['folder'] : xmlDoc['tree']['folder'];
 
 		mainWindow.updateWindow(root_folder, find_by_folder_id, pDialog);
 
 	});
-}
-var xmlToJson = function(xml) {
-	var attr, child, attrs = xml.attributes, children = xml.childNodes, key = xml.nodeType, obj = {}, i = -1;
-
-	if(key == 1 && attrs && attrs.length) {
-		obj[ key = '@attributes'] = {};
-		while( attr = attrs.item(++i)) {
-			obj[key][attr.nodeName] = attr.nodeValue;
-		}
-		i = -1;
-	} else if(key == 3) {
-		obj = xml.nodeValue;
-	}
-	for(var i = 0; i < children.length; i++) {
-		var child = children.item(i);
-		key = child.nodeName;
-		if(obj.hasOwnProperty(key)) {
-			if(obj.toString.call(obj[key]) != '[object Array]') {
-				obj[key] = [obj[key]];
-			}
-			obj[key].push(Utils.xmlToJson(child));
-		} else {
-			obj[key] = Utils.xmlToJson(child);
-		}
-	}
-
-	return obj;
 }

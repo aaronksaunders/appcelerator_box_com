@@ -1,16 +1,16 @@
 Logfile initialized
 [INFO] logfile = /home/freddy/git/appcelerator_box_com/build.log
-[DEBUG] /home/freddy/.titanium/mobilesdk/linux/1.9.0.v20120127003134/android/builder.py simulator box_com_app /home/freddy/android-sdk /home/freddy/git/appcelerator_box_com ci.boxcomapp 9 WVGA800 
+[DEBUG] /home/freddy/.titanium/mobilesdk/linux/1.8.1/android/builder.py simulator box_com_app /home/freddy/android-sdk /home/freddy/git/appcelerator_box_com ci.boxcomapp 9 WVGA800 
 [INFO] Building box_com_app for Android ... one moment
-[INFO] Titanium SDK version: 1.9.0 (01/27/12 00:31 da34dcf)
+[INFO] Titanium SDK version: 1.8.1 (01/27/12 17:31 a24502a)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.003402 seconds on emulator to get ready
+[DEBUG] waited 0.003040 seconds on emulator to get ready
 [DEBUG] ci.boxcomapp installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: /home/freddy/git/appcelerator_box_com/Resources/app.js => /home/freddy/git/appcelerator_box_com/build/android/bin/assets/Resources/app.js
+[TRACE] COPYING MODIFIED FILE: /home/freddy/git/appcelerator_box_com/Resources/controllers/ApplicationController.js => /home/freddy/git/appcelerator_box_com/build/android/bin/assets/Resources/controllers/ApplicationController.js
 [INFO] Tiapp.xml unchanged, skipping class generation
 [DEBUG] Processing Android resource drawables
 [DEBUG] found drawable-notlong-land-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-land-hdpi/default.png
