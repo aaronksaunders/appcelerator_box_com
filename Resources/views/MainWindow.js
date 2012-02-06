@@ -23,7 +23,8 @@ MainWindow.prototype.createWindow = function() {
 
 	var toolbarView = Ti.UI.createView({
 		width : '100%',
-		height : '50dp',
+		height : '40dp',
+		top: Ti.Platform.displayCaps.platformHeight - 60,
 		layout : 'horizontal'
 	})
 
@@ -43,7 +44,8 @@ MainWindow.prototype.createWindow = function() {
 
 	that.folderList = Ti.UI.createTableView({
 		top:'36dp',
-		height : '100%',
+		bottom:'44dp',
+		//height : '100%',
 		width : '100%',
 		data : [{
 			title : 'Empty'
@@ -87,18 +89,17 @@ MainWindow.prototype.createWindow = function() {
 			fontSize : '20px',
 			fontWeight : 'bold'
 		}
-	})
+	});
 
 	/*
 	 * Buttons
 	 */
-
 	var uploadFile = Ti.UI.createButton({
 		title : "Upload",
 		width : "auto",
 		height : '50dp',
 		top : 0
-	})
+	});
 
 	var upFolder = createCustomButton('up', 'Up');
 	var createFolder = createCustomButton('add', 'New Folder');
@@ -108,7 +109,6 @@ MainWindow.prototype.createWindow = function() {
 	/*
 	 * Button Actions
 	 */
-
 	createFolder.addEventListener('click', function(e) {
 		that.controller.createFolder.call(that.controller, e);
 	});
@@ -133,7 +133,8 @@ MainWindow.prototype.createWindow = function() {
 		backgroundColor : '#fff',
 		layout : 'horizontal',
 		height : '20dp'
-	})
+	});
+	
 	tableHeader.add(labelCurrentFolder);
 	tableHeader.add(labelCurrentFolderName);
 	that.labelCurrentFolder = labelCurrentFolder;
@@ -148,7 +149,7 @@ MainWindow.prototype.createWindow = function() {
 	that.window.add(toolbarView);
 	that.window.add(tableHeader);
 	that.window.add(viewCurrentFolder);
-}
+};
 
 MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDialog) {
 	var that = this;
@@ -310,7 +311,7 @@ function dump_files() {
 		"params[]" : "simple"
 	}, function(data) {
 		var xmlDoc = Ti.XML.parseString(data);
-		alert(xmlDoc.documentElement.getAttribute("rows"))
+		alert(xmlDoc.documentElement.getAttribute("rows"));
 	});
 }
 
@@ -334,23 +335,23 @@ function createNewFolderDialog() {
 function createCustomButton(icon_name, name) {
 	var button = Ti.UI.createView({
 		layout : 'vertical',
-		width : 65,
-		height : 55,
+		width : '36dp',
+		height : '36dp',
 		touchEnabled : true,
 		borderColor : '#ccc',
 		borderRadius : 6,
 		borderWidth : 1,
-		left : 5,
+		left : '30dp',
 		backgroundColor : '#F8F8F8'
-	})
+	});
 	//Ti.API.debug(icon_name)
 	var icon = Ti.UI.createImageView({
 		url : './images/buttons/' + icon_name + '.png',
-		width : 32,
-		height : 32,
-		top : 4,
-		left : 16
-	})
+		width : '22dp',
+		height : '22dp',
+		top : '6dp',
+		left : '6dp'
+	});
 
 	var label = Ti.UI.createLabel({
 		text : name,
@@ -360,10 +361,10 @@ function createCustomButton(icon_name, name) {
 		},
 		height : 18,
 		textAlign : 'center'
-	})
+	});
 
 	button.add(icon);
-	button.add(label);
+	//button.add(label);
 	button.show();
 	return button;
 }
