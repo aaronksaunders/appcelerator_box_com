@@ -4,9 +4,10 @@ B = require('box_module').BOXModule;
 U = require('/common/utils').Utils;
 BOXModule = new B('aeu2bzzrh76crhsbggx1nzubc4p37ou0', 'http://www.clearlyinnovative.com/oAuth.html');
 
-/*
+/** ------------------------------------------------------------------------------
  *
- */
+ *
+ * ----------------------------------------------------------------------------- */
 ApplicationController = function() {
 	// Windows
 	var MainWindow = require('/views/MainWindow').MainWindow;
@@ -30,33 +31,61 @@ ApplicationController = function() {
 
 	app.GlobalUpdate('applicationController', this);
 
-}
+};
 exports.ApplicationController = ApplicationController;
 
-ApplicationController.prototype.createFolder = function() {
-	// Creating a new folder
-	createNewFolderDialog();
-	return;
-	Ti.API.debug('create_folder:');
-	BOXModule.callMethod("create_folder", {
-		"name" : "API Folder 2",
-		"share" : "1",
-		"parent_id" : "0"
-	}, function(data) {
-		Ti.API.debug(data);
-	});
-}
+/** ------------------------------------------------------------------------------
+ *
+ * Create new folder
+ *
+ * ----------------------------------------------------------------------------- */
 
+ApplicationController.prototype.createFolder = function() {
+
+	var DialogWindow = require('/views/DialogWindow').DialogWindow;
+	var window = new DialogWindow();
+	
+	// display toolbar for data entry
+	window.create(app.globals.mainWindow.window, function(e) {
+		if(e.success === true) {
+			Ti.API.debug('create_folder: ' + name);
+			BOXModule.callMethod("create_folder", {
+				"name" : e.name,
+				"share" : "1",
+				"parent_id" : app.globals.current_folder // CHECK  THIS, I BELIEVE WE NEED TO VERIFY THE ID
+			}, function(data) {
+				Ti.API.debug(data);
+			});
+		}
+	});
+};
+/** ------------------------------------------------------------------------------
+ *
+ * reload data in current view
+ *
+ * ----------------------------------------------------------------------------- */
 ApplicationController.prototype.refreshFolder = function() {
 	var that = this;
 	that.dumpFolderContents(app.globals.current_folder);
-}
+};
+/** ------------------------------------------------------------------------------
+ *
+ * navigate up in folder history
+ *
+ * ----------------------------------------------------------------------------- */
+
 ApplicationController.prototype.historyBack = function() {
 	var that = this;
 	if(app.globals.history.length > 0) {
 		that.dumpFolderContents(app.globals.history.pop(), true);
 	}
-}
+};
+/** ------------------------------------------------------------------------------
+ *
+ * view contents of file
+ *
+ * ----------------------------------------------------------------------------- */
+
 ApplicationController.prototype.viewFileContents = function(e) {
 	var that = this;
 	if(e.rowData.isFolder)
@@ -64,7 +93,12 @@ ApplicationController.prototype.viewFileContents = function(e) {
 	else {
 		/// Need to download file and show it on device with default application
 	}
-}
+};
+/** ------------------------------------------------------------------------------
+ *
+ * upload a file to the system
+ *
+ * ----------------------------------------------------------------------------- */
 ApplicationController.prototype.uploadFile = function() {
 	var that = this;
 	Ti.API.debug('upload file:');
@@ -109,7 +143,12 @@ ApplicationController.prototype.uploadFile = function() {
 	}, function(data) {
 		Ti.API.debug(JSON.stringify(data));
 	});
-}
+};
+/** ------------------------------------------------------------------------------
+ *
+ * get the list of folder items and display them in the main table
+ *
+ * ----------------------------------------------------------------------------- */
 ApplicationController.prototype.dumpFolderContents = function(_folder_id, backwards) {
 	// get the table view
 	var folderList = app.globals.mainWindow.folderList;
@@ -139,4 +178,4 @@ ApplicationController.prototype.dumpFolderContents = function(_folder_id, backwa
 		mainWindow.updateWindow(root_folder, find_by_folder_id, pDialog);
 
 	});
-}
+};

@@ -24,7 +24,7 @@ MainWindow.prototype.createWindow = function() {
 	var toolbarView = Ti.UI.createView({
 		width : '100%',
 		height : '40dp',
-		top: Ti.Platform.displayCaps.platformHeight - 60,
+		top : Ti.Platform.displayCaps.platformHeight - 60,
 		layout : 'horizontal'
 	})
 
@@ -43,8 +43,8 @@ MainWindow.prototype.createWindow = function() {
 	});
 
 	that.folderList = Ti.UI.createTableView({
-		top:'36dp',
-		bottom:'44dp',
+		top : '36dp',
+		bottom : '44dp',
 		//height : '100%',
 		width : '100%',
 		data : [{
@@ -134,7 +134,7 @@ MainWindow.prototype.createWindow = function() {
 		layout : 'horizontal',
 		height : '20dp'
 	});
-	
+
 	tableHeader.add(labelCurrentFolder);
 	tableHeader.add(labelCurrentFolderName);
 	that.labelCurrentFolder = labelCurrentFolder;
@@ -190,16 +190,16 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 	var rows = [];
 
 	for(var folder in folders) {
-		Ti.API.debug("Subfolder: " + JSON.stringify(folders[folder]))
-		rows.push(createFolderRow(folders[folder]))
-	}
+		Ti.API.debug("Subfolder: " + JSON.stringify(folders[folder]));
+		rows.push(createFolderRow(folders[folder]));
+	};
 
 	pDialog.setMessage("Loading Files");
 
 	for(var file in files) {
-		Ti.API.debug("File: " + JSON.stringify(files))
-		rows.push(createFileRow(files[file]))
-	}
+		Ti.API.debug("File: " + JSON.stringify(files));
+		rows.push(createFileRow(files[file]));
+	};
 
 	if(rows.length)
 		that.folderList.setData(rows);
@@ -207,7 +207,7 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 		that.folderList.setData({
 			title : 'Empty',
 			hasChild : false
-		})
+		});
 	pDialog.hide();
 
 	// cleanup
@@ -216,7 +216,7 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 	folders = null;
 	return;
 
-}
+};
 function createFolderRow(data) {
 	var folderId = data['@attributes']['id'];
 	var folderName = data['@attributes']['name'];
@@ -315,18 +315,6 @@ function dump_files() {
 	});
 }
 
-function createNewFolderDialog() {
-	var view = Ti.UI.createView({
-		width : '200dp',
-		height : '400dp',
-		backgroundColor : 'red',
-		top : 0
-	})
-
-	//return view;
-
-	win1.add(view);
-}
 
 /*
  *  UI extra stuff
