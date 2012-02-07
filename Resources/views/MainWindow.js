@@ -192,10 +192,10 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 	if(rows.length)
 		that.folderList.setData(rows);
 	else
-		that.folderList.setData({
+		that.folderList.setData([{
 			title : 'Empty',
 			hasChild : false
-		});
+		}]);
 	pDialog.hide();
 
 	// cleanup
