@@ -141,14 +141,14 @@ MainWindow.prototype.createWindow = function() {
 	that.labelCurrentFolderName = labelCurrentFolderName;
 
 	that.window.add(labelTitle);
-	//toolbarView.add(upFolder);
-	//toolbarView.add(createFolder);
-	//toolbarView.add(refreshFolder);
-	//toolbarView.add(uploadFile);
-
-	//that.window.add(toolbarView);
-	//that.window.add(tableHeader);
-	//that.window.add(viewCurrentFolder);
+	toolbarView.add(upFolder);
+	toolbarView.add(createFolder);
+	toolbarView.add(refreshFolder);
+	toolbarView.add(uploadFile);
+	
+	that.window.add(toolbarView);
+	that.window.add(tableHeader);
+	that.window.add(viewCurrentFolder);
 	
 	
 };
