@@ -26,6 +26,7 @@ MainWindow.prototype.createWindow = function() {
 		backgroundColor : '#fff',
 		//layout : 'vertical', // CAUSED ISSUES ON IOS
 	});
+	that.window.orientationModes=[Titanium.UI.PORTRAIT];
 	
 	var _top = 0;
 	
