@@ -47,13 +47,6 @@ MainWindow.prototype.createWindow = function() {
 	
 	_top+=36;
 	
-	var tableHeader = Ti.UI.createView({
-		height :25,
-		width : '100%',
-		//layout : 'horizontal',
-		//top: 36,
-		backgroundColor: '#fff'
-	})
 	
 	// View to hold the labels with current folder
 	var viewCurrentFolder = Ti.UI.createView({
@@ -72,8 +65,6 @@ MainWindow.prototype.createWindow = function() {
 		data : [{
 			title : 'Empty'
 		}],
-		//header : tableHeader,
-		//style : Ti.UI.iPhone.TableViewStyle.GROUPED,
 		backgroundColor : '#fff'
 	})
 	
@@ -135,9 +126,7 @@ MainWindow.prototype.createWindow = function() {
 	that.window.add(that.folderList);
 	that.window.open();
 	
-	//viewCurrentFolder.add(labelCurrentFolder);
 	viewCurrentFolder.add(labelCurrentFolderName);
-	//that.labelCurrentFolder = labelCurrentFolder;
 	that.labelCurrentFolderName = labelCurrentFolderName;
 
 	that.window.add(labelTitle);
@@ -148,7 +137,6 @@ MainWindow.prototype.createWindow = function() {
 	toolbarView.add(uploadFile);
 	
 	that.window.add(toolbarView);
-	//that.window.add(tableHeader);
 };
 
 MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDialog) {
@@ -333,7 +321,7 @@ function createCustomButton(icon_name, name) {
 		left : '30dp',
 		backgroundColor : '#F8F8F8'
 	});
-	//Ti.API.debug(icon_name)
+	
 	var icon = Ti.UI.createImageView({
 		url : '/images/buttons/' + icon_name + '.png',
 		width : '22dp',

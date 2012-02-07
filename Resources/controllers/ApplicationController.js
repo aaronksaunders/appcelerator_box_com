@@ -55,10 +55,10 @@ ApplicationController.prototype.createFolder = function() {
 				"parent_id" : app.globals.current_folder // CHECK  THIS, I BELIEVE WE NEED TO VERIFY THE ID
 			}, function(data) {
 				if(data.success){
-					//Ti.API.debug(JSON.stringify(data));
 					that.dumpFolderContents(app.globals.current_folder);
+				} else {
+					alert('There was an error creating the folder. Please check that you entered a valid name.')
 				}
-				Ti.API.debug(data);
 			});
 		}
 	});
@@ -111,37 +111,6 @@ ApplicationController.prototype.viewFileContents = function(e) {
 				}
 			});
 		
-		return ;
-		
-		 var win = Ti.UI.createWindow({
-		 	width: '50%',
-			height: '50%',
-			backgroundColor: 'red',
-			modal: true
-		 })
-		var wview = Ti.UI.createWebView({
-			width: '100%',
-			height: '100%',
-			url: BOXModule.getFileURL(e.rowData.id),
-		})
-		Ti.API.debug(JSON.stringify(BOXModule.getFileURL(e.rowData.id)));
-		win.add(wview);
-		wview.show();
-		win.open();
-		
-		
-		return;
-		BOXModule.callMethod("download", {
-				"file_id" : e.rowData.id,
-				"folder_id" : app.globals.current_folder
-			}, function(data) {
-				if(data.success) {
-					pDialog.hide();
-					Ti.API.debug(JSON.stringify(data));
-				} else {
-					Ti.API.debug(JSON.stringify(data))
-				}
-			});
 	}
 };
 /** ------------------------------------------------------------------------------
