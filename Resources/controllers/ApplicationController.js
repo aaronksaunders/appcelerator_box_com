@@ -41,19 +41,23 @@ exports.ApplicationController = ApplicationController;
  * ----------------------------------------------------------------------------- */
 
 ApplicationController.prototype.createFolder = function() {
-
+	var that = this;
 	var DialogWindow = require('/views/DialogWindow').DialogWindow;
 	var window = new DialogWindow();
 	
 	// display toolbar for data entry
 	window.create(app.globals.mainWindow.window, function(e) {
 		if(e.success === true) {
-			Ti.API.debug('create_folder: ' + name);
+			Ti.API.debug('create_folder: ' + e.name);
 			BOXModule.callMethod("create_folder", {
 				"name" : e.name,
-				"share" : "1",
+				"share" : "0",
 				"parent_id" : app.globals.current_folder // CHECK  THIS, I BELIEVE WE NEED TO VERIFY THE ID
 			}, function(data) {
+				if(data.success){
+					//Ti.API.debug(JSON.stringify(data));
+					that.dumpFolderContents(app.globals.current_folder);
+				}
 				Ti.API.debug(data);
 			});
 		}
@@ -164,8 +168,7 @@ ApplicationController.prototype.uploadFile = function() {
 			}, function(data) {
 				if(data.success) {
 					pDialog.hide();
-					Ti.API.debug(JSON.stringify(data));
-
+					//Ti.API.debug(JSON.stringify(data));
 					that.dumpFolderContents(app.globals.current_folder);
 				}
 			});
@@ -175,18 +178,6 @@ ApplicationController.prototype.uploadFile = function() {
 		error : function() {
 		},
 		allowImageEditing : true
-	});
-
-	return false;
-
-	BOXModule.callMethod("upload", {
-		"file" : "/KS_nav_ui.png",
-		"share" : "0",
-		"message" : "Uploaded using API",
-		// Uploading to the root directory for now
-		"folder_id" : "0"
-	}, function(data) {
-		Ti.API.debug(JSON.stringify(data));
 	});
 };
 /** ------------------------------------------------------------------------------

@@ -23,8 +23,8 @@ DialogWindow.prototype.createAndroid = function(dlg, callback) {
 
 	var dialog = Ti.UI.createOptionDialog({
 		title : 'Enter Folder Name',
-		androidView : input_text,
-		options : ['Cancel', 'Create Folder'],
+		androidView : folderNameField,
+		buttonNames : ['Cancel', 'Create Folder'],
 		cancel : 0
 	});
 
@@ -42,6 +42,8 @@ DialogWindow.prototype.createAndroid = function(dlg, callback) {
 		}
 
 	});
+	
+	dialog.show();
 };
 /**
  * create the dialog

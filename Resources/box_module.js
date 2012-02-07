@@ -120,7 +120,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 		
 		if ( method == 'upload' ){
 			var url = that.API_UPLOAD_URL + that.ACCESS_TOKEN + "/" + params.folder_id;
-			IS_POST_REQUEST == true;
+			IS_POST_REQUEST = true;
 		} else if ( method == 'download' ){
 			var url = that.API_DOWNLOAD_URL + that.ACCESS_TOKEN + '/' + params.file_id;
 			params = {};
@@ -128,12 +128,12 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 			var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
 
 		// add params
-		/*var paramMap = params || {};
+		var paramMap = params || {};
 		if(!IS_POST_REQUEST){
 			for(var a in paramMap) {
 				url += '&' + Titanium.Network.encodeURIComponent(a) + '=' + (paramMap[a] ? Titanium.Network.encodeURIComponent(paramMap[a]) : "");
 			}
-		}*/
+		}
 
 		// open client
 		var paramMap = params || {};

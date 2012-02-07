@@ -21,70 +21,18 @@ MainWindow.prototype.createWindow = function() {
 	app.GlobalUpdate('current_folder', 0);
 	app.GlobalUpdate('history', []);
 	
-	var toolbarTop = Ti.Platform.displayCaps.platformHeight - 60;
-
-	var toolbarView = Ti.UI.createView({
-		width : '100%',
-		height : '40dp',
-		backgroundColor: 'red',
-		top : (app.globals.isAndroid) ? toolbarTop : '' + toolbarTop  + 'dp',
-		layout : 'horizontal'
-	})
-	
-	Ti.API.debug('-----***********-----. TOP: '+ (app.globals.isAndroid) ? Ti.Platform.displayCaps.platformHeight - 60 :  + (Ti.Platform.displayCaps.platformHeight - 60) + 'dp')
-
-	var tableHeader = Ti.UI.createView({
-		height : '25dp',
-		width : '100%',
-		layout : 'horizontal'
-	})
-
 	that.window = Titanium.UI.createWindow({
-		title : 'Tab 1',
+		title : 'Box.com Sample App',
 		backgroundColor : '#fff',
 		//layout : 'vertical', // CAUSED ISSUES ON IOS
-		height : '100%',
-		width : '100%'
 	});
-
-	that.folderList = Ti.UI.createTableView({
-		top : '36dp',
-		bottom : '44dp',
-		//height : '100%',
-		width : '100%',
-		data : [{
-			title : 'Empty'
-		}],
-		header : tableHeader,
-		//style : Ti.UI.iPhone.TableViewStyle.GROUPED,
-		backgroundColor : '#fff'
-	})
-	that.window.add(that.folderList);
-	that.window.open();
-
-	var labelCurrentFolder = Ti.UI.createLabel({
-		text : 'Current Folder: ',
-		width : 'auto',
-		color : '#666',
-		font : {
-			fontSize : '16px'
-		}
-	})
-
-	var labelCurrentFolderName = Ti.UI.createLabel({
-		text : ' none ',
-		width : 'auto',
-		color : '#333',
-		font : {
-			fontSize : '16px',
-			fontWeight : 'bold'
-		}
-	})
-
+	
+	var _top = 0;
+	
 	var labelTitle = Ti.UI.createLabel({
 		text : 'Box.com Sample App',
 		width : '100%',
-		height : '36dp',
+		height : 36,
 		color : '#fff',
 		textAlign : 'center',
 		exitOnClose : true,
@@ -95,21 +43,70 @@ MainWindow.prototype.createWindow = function() {
 			fontWeight : 'bold'
 		}
 	});
+	
+	_top+=36;
+	
+	var tableHeader = Ti.UI.createView({
+		height :25,
+		width : '100%',
+		//layout : 'horizontal',
+		//top: 36,
+		backgroundColor: '#fff'
+	})
+	
+	// View to hold the labels with current folder
+	var viewCurrentFolder = Ti.UI.createView({
+		backgroundColor : '#fff',
+		top: _top,
+		//layout: 'horizontal',
+		height : 30,
+	});
+	
+	_top += 30;
+	
+	that.folderList = Ti.UI.createTableView({
+		top : _top,
+		bottom : (Ti.Platform.osname==='android') ? 60 : 40,
+		width : '100%',
+		data : [{
+			title : 'Empty'
+		}],
+		//header : tableHeader,
+		//style : Ti.UI.iPhone.TableViewStyle.GROUPED,
+		backgroundColor : '#fff'
+	})
+	
+	_top+=that.folderList.top;
+	
+	var labelCurrentFolderName = Ti.UI.createLabel({
+		text : ' none ',
+		width : '100%',
+		height: '100%',
+		color : '#333',
+		//top: 10,
+		left: 10,
+		textAlign: 'left',
+		font : {
+			fontSize : '16px',
+			fontWeight : 'bold'
+		}
+	})
+
+	var toolbarView = Ti.UI.createView({
+		width : '100%',
+		height : '40dp',
+		bottom : 0,
+		layout : 'horizontal',
+		zIndex: 100
+	})
 
 	/*
 	 * Buttons
 	 */
-	var uploadFile = Ti.UI.createButton({
-		title : "Upload",
-		width : "auto",
-		height : '50dp',
-		top : 0
-	});
-
 	var upFolder = createCustomButton('up', 'Up');
-	var createFolder = createCustomButton('add', 'New Folder');
+	var createFolder = createCustomButton('add', 'Folder');
 	var refreshFolder = createCustomButton('refresh', 'Refresh');
-	var uploadFile = createCustomButton('upload', 'Upload File');
+	var uploadFile = createCustomButton('upload', 'File');
 
 	/*
 	 * Button Actions
@@ -133,29 +130,24 @@ MainWindow.prototype.createWindow = function() {
 	that.folderList.addEventListener('click', function(e) {
 		that.controller.viewFileContents.call(that.controller, e);
 	});
-	// View to hold the labels with current folder
-	var viewCurrentFolder = Ti.UI.createView({
-		backgroundColor : '#fff',
-		layout : 'horizontal',
-		height : '20dp'
-	});
-
-	tableHeader.add(labelCurrentFolder);
-	tableHeader.add(labelCurrentFolderName);
-	that.labelCurrentFolder = labelCurrentFolder;
+	
+	that.window.add(that.folderList);
+	that.window.open();
+	
+	//viewCurrentFolder.add(labelCurrentFolder);
+	viewCurrentFolder.add(labelCurrentFolderName);
+	//that.labelCurrentFolder = labelCurrentFolder;
 	that.labelCurrentFolderName = labelCurrentFolderName;
 
 	that.window.add(labelTitle);
+	that.window.add(viewCurrentFolder);
 	toolbarView.add(upFolder);
 	toolbarView.add(createFolder);
 	toolbarView.add(refreshFolder);
 	toolbarView.add(uploadFile);
 	
 	that.window.add(toolbarView);
-	that.window.add(tableHeader);
-	that.window.add(viewCurrentFolder);
-	
-	
+	//that.window.add(tableHeader);
 };
 
 MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDialog) {
@@ -324,7 +316,6 @@ function dump_files() {
 	});
 }
 
-
 /*
  *  UI extra stuff
  */
@@ -332,22 +323,22 @@ function dump_files() {
 function createCustomButton(icon_name, name) {
 	var button = Ti.UI.createView({
 		layout : 'vertical',
-		width : '36dp',
-		height : '36dp',
+		width : '44dp',
+		height : '40dp',
 		touchEnabled : true,
 		borderColor : '#ccc',
-		borderRadius : 6,
+		borderRadius : 3,
 		borderWidth : 1,
 		left : '30dp',
 		backgroundColor : '#F8F8F8'
 	});
 	//Ti.API.debug(icon_name)
 	var icon = Ti.UI.createImageView({
-		url : './images/buttons/' + icon_name + '.png',
+		url : '/images/buttons/' + icon_name + '.png',
 		width : '22dp',
 		height : '22dp',
-		top : '6dp',
-		left : '6dp'
+		top : '4dp',
+		left : '11dp'
 	});
 
 	var label = Ti.UI.createLabel({
@@ -356,12 +347,13 @@ function createCustomButton(icon_name, name) {
 		font : {
 			fontSize : '9px'
 		},
+		top: 0,
 		height : 18,
 		textAlign : 'center'
 	});
 
 	button.add(icon);
-	//button.add(label);
+	button.add(label);
 	button.show();
 	return button;
 }
