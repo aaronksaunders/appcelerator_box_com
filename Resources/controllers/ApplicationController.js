@@ -68,6 +68,7 @@ ApplicationController.prototype.refreshFolder = function() {
 	var that = this;
 	that.dumpFolderContents(app.globals.current_folder);
 };
+
 /** ------------------------------------------------------------------------------
  *
  * navigate up in folder history
@@ -91,7 +92,52 @@ ApplicationController.prototype.viewFileContents = function(e) {
 	if(e.rowData.isFolder)
 		that.dumpFolderContents(e.rowData.id);
 	else {
-		/// Need to download file and show it on device with default application
+		
+		BOXModule.callMethod("download", {
+				"file_id" : e.rowData.id,
+				"folder_id" : app.globals.current_folder
+			}, function(data) {
+				if(data.success) {					
+					Ti.API.debug(JSON.stringify(data));
+					 var f = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,e.rowData.fileName);
+            		f.write(data.responseData);
+            		Ti.API.debug('Native Path: '+f.nativePath)
+				} else {
+					Ti.API.debug(JSON.stringify(data))
+				}
+			});
+		
+		return ;
+		
+		 var win = Ti.UI.createWindow({
+		 	width: '50%',
+			height: '50%',
+			backgroundColor: 'red',
+			modal: true
+		 })
+		var wview = Ti.UI.createWebView({
+			width: '100%',
+			height: '100%',
+			url: BOXModule.getFileURL(e.rowData.id),
+		})
+		Ti.API.debug(JSON.stringify(BOXModule.getFileURL(e.rowData.id)));
+		win.add(wview);
+		wview.show();
+		win.open();
+		
+		
+		return;
+		BOXModule.callMethod("download", {
+				"file_id" : e.rowData.id,
+				"folder_id" : app.globals.current_folder
+			}, function(data) {
+				if(data.success) {
+					pDialog.hide();
+					Ti.API.debug(JSON.stringify(data));
+				} else {
+					Ti.API.debug(JSON.stringify(data))
+				}
+			});
 	}
 };
 /** ------------------------------------------------------------------------------
@@ -114,7 +160,6 @@ ApplicationController.prototype.uploadFile = function() {
 				"file" : image,
 				"share" : "0",
 				"message" : "Uploaded using API",
-				// Uploading to the root directory for now
 				"folder_id" : app.globals.current_folder
 			}, function(data) {
 				if(data.success) {

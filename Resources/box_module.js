@@ -21,6 +21,7 @@ BOXModule = function(api_key, redirectUri) {
 	this.xhr = null;
 	this.API_URL = "https://www.box.net/api/1.0/rest?action=";
 	this.API_UPLOAD_URL = "https://upload.box.net/api/1.0/upload/";
+	this.API_DOWNLOAD_URL = "https://www.box.net/api/1.0/download/";
 	this.ticket = null;
 };
 
@@ -99,6 +100,11 @@ BOXModule.prototype.getTicket = function(callback) {
 		}).show();
 	}
 }
+
+BOXModule.prototype.getFileURL = function(file_id){
+	return this.API_DOWNLOAD_URL + this.ACCESS_TOKEN + '/' + file_id;
+}
+
 BOXModule.prototype.callMethod = function(method, params, callback) {
 	var that = this;
 
@@ -110,10 +116,14 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 		}
 		
 		// These three methods use post
-		var IS_POST_REQUEST = (method == 'upload');
+		var IS_POST_REQUEST = false
 		
-		if(IS_POST_REQUEST){
+		if ( method == 'upload' ){
 			var url = that.API_UPLOAD_URL + that.ACCESS_TOKEN + "/" + params.folder_id;
+			IS_POST_REQUEST == true;
+		} else if ( method == 'download' ){
+			var url = that.API_DOWNLOAD_URL + that.ACCESS_TOKEN + '/' + params.file_id;
+			params = {};
 		} else 
 			var url = that.API_URL + method + "&api_key=" + that.api_key + "&auth_token=" + that.ACCESS_TOKEN;
 
@@ -159,13 +169,14 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 
 		that.xhr.onload = function(_xhr) {
 			//Ti.API.debug("BOXModule response: " + that.xhr.responseText);
-			var xmlDocument = Ti.XML.parseString(that.xhr.responseText);
 			if(callback !== null) {
 				Ti.API.debug('Success Callback..')
 				callback({
 					"success" : true,
 					"error" : null,
-					"responseText" : that.xhr.responseText
+					"responseText" : that.xhr.responseText,
+					"responseXML" : that.xhr.responseXML,
+					"responseData" : that.xhr.responseData
 				});
 			}
 		};

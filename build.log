@@ -6,11 +6,11 @@ Logfile initialized
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.003040 seconds on emulator to get ready
+[DEBUG] waited 0.003111 seconds on emulator to get ready
 [DEBUG] ci.boxcomapp installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: /home/freddy/git/appcelerator_box_com/Resources/controllers/ApplicationController.js => /home/freddy/git/appcelerator_box_com/build/android/bin/assets/Resources/controllers/ApplicationController.js
+[TRACE] COPYING MODIFIED FILE: /home/freddy/git/appcelerator_box_com/Resources/views/MainWindow.js => /home/freddy/git/appcelerator_box_com/build/android/bin/assets/Resources/views/MainWindow.js
 [INFO] Tiapp.xml unchanged, skipping class generation
 [DEBUG] Processing Android resource drawables
 [DEBUG] found drawable-notlong-land-hdpi splash screen at /home/freddy/git/appcelerator_box_com/Resources/android/images/res-notlong-land-hdpi/default.png

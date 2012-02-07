@@ -141,14 +141,16 @@ MainWindow.prototype.createWindow = function() {
 	that.labelCurrentFolderName = labelCurrentFolderName;
 
 	that.window.add(labelTitle);
-	toolbarView.add(upFolder);
-	toolbarView.add(createFolder);
-	toolbarView.add(refreshFolder);
-	toolbarView.add(uploadFile);
+	//toolbarView.add(upFolder);
+	//toolbarView.add(createFolder);
+	//toolbarView.add(refreshFolder);
+	//toolbarView.add(uploadFile);
 
-	that.window.add(toolbarView);
-	that.window.add(tableHeader);
-	that.window.add(viewCurrentFolder);
+	//that.window.add(toolbarView);
+	//that.window.add(tableHeader);
+	//that.window.add(viewCurrentFolder);
+	
+	
 };
 
 MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDialog) {
@@ -221,6 +223,7 @@ function createFolderRow(data) {
 	var folderId = data['@attributes']['id'];
 	var folderName = data['@attributes']['name'];
 	var shared = (data['@attributes']['shared'] == 1);
+	Ti.API.debug("Shared: "+ shared)
 
 	var row = Titanium.UI.createTableViewRow({
 		id : folderId,
@@ -240,7 +243,7 @@ function createFolderRow(data) {
 	})
 
 	var icon = Ti.UI.createImageView({
-		image : (shared) ? './images/folder_shared.png' : './images/folder.png',
+		image : (shared) ? '/images/folder_shared.png' : '/images/folder.png',
 		width : 32,
 		height : 32,
 		left : 2
@@ -267,6 +270,7 @@ function createFolderRow(data) {
 function createFileRow(data) {
 	var row = Titanium.UI.createTableViewRow({
 		id : data['@attributes']['id'],
+		fileName : data['@attributes']['file_name'],
 		hasChild : false,
 		touchEnabled : true,
 		isFolder : false
