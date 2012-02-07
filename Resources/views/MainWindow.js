@@ -20,12 +20,18 @@ MainWindow.prototype.createWindow = function() {
 	/// initializing globals
 	app.GlobalUpdate('current_folder', 0);
 	app.GlobalUpdate('history', []);
+	
+	var toolbarTop = Ti.Platform.displayCaps.platformHeight - 60;
 
 	var toolbarView = Ti.UI.createView({
 		width : '100%',
-		height : '50dp',
+		height : '40dp',
+		backgroundColor: 'red',
+		top : (app.globals.isAndroid) ? toolbarTop : '' + toolbarTop  + 'dp',
 		layout : 'horizontal'
 	})
+	
+	Ti.API.debug('-----***********-----. TOP: '+ (app.globals.isAndroid) ? Ti.Platform.displayCaps.platformHeight - 60 :  + (Ti.Platform.displayCaps.platformHeight - 60) + 'dp')
 
 	var tableHeader = Ti.UI.createView({
 		height : '25dp',
@@ -42,8 +48,9 @@ MainWindow.prototype.createWindow = function() {
 	});
 
 	that.folderList = Ti.UI.createTableView({
-		top:'36dp',
-		height : '100%',
+		top : '36dp',
+		bottom : '44dp',
+		//height : '100%',
 		width : '100%',
 		data : [{
 			title : 'Empty'
@@ -87,18 +94,17 @@ MainWindow.prototype.createWindow = function() {
 			fontSize : '20px',
 			fontWeight : 'bold'
 		}
-	})
+	});
 
 	/*
 	 * Buttons
 	 */
-
 	var uploadFile = Ti.UI.createButton({
 		title : "Upload",
 		width : "auto",
 		height : '50dp',
 		top : 0
-	})
+	});
 
 	var upFolder = createCustomButton('up', 'Up');
 	var createFolder = createCustomButton('add', 'New Folder');
@@ -108,7 +114,6 @@ MainWindow.prototype.createWindow = function() {
 	/*
 	 * Button Actions
 	 */
-
 	createFolder.addEventListener('click', function(e) {
 		that.controller.createFolder.call(that.controller, e);
 	});
@@ -133,7 +138,8 @@ MainWindow.prototype.createWindow = function() {
 		backgroundColor : '#fff',
 		layout : 'horizontal',
 		height : '20dp'
-	})
+	});
+
 	tableHeader.add(labelCurrentFolder);
 	tableHeader.add(labelCurrentFolderName);
 	that.labelCurrentFolder = labelCurrentFolder;
@@ -144,11 +150,13 @@ MainWindow.prototype.createWindow = function() {
 	toolbarView.add(createFolder);
 	toolbarView.add(refreshFolder);
 	toolbarView.add(uploadFile);
-
+	
 	that.window.add(toolbarView);
 	that.window.add(tableHeader);
 	that.window.add(viewCurrentFolder);
-}
+	
+	
+};
 
 MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDialog) {
 	var that = this;
@@ -189,16 +197,16 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 	var rows = [];
 
 	for(var folder in folders) {
-		Ti.API.debug("Subfolder: " + JSON.stringify(folders[folder]))
-		rows.push(createFolderRow(folders[folder]))
-	}
+		Ti.API.debug("Subfolder: " + JSON.stringify(folders[folder]));
+		rows.push(createFolderRow(folders[folder]));
+	};
 
 	pDialog.setMessage("Loading Files");
 
 	for(var file in files) {
-		Ti.API.debug("File: " + JSON.stringify(files))
-		rows.push(createFileRow(files[file]))
-	}
+		Ti.API.debug("File: " + JSON.stringify(files));
+		rows.push(createFileRow(files[file]));
+	};
 
 	if(rows.length)
 		that.folderList.setData(rows);
@@ -206,7 +214,7 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 		that.folderList.setData({
 			title : 'Empty',
 			hasChild : false
-		})
+		});
 	pDialog.hide();
 
 	// cleanup
@@ -215,11 +223,12 @@ MainWindow.prototype.updateWindow = function(root_folder, find_by_folder_id, pDi
 	folders = null;
 	return;
 
-}
+};
 function createFolderRow(data) {
 	var folderId = data['@attributes']['id'];
 	var folderName = data['@attributes']['name'];
 	var shared = (data['@attributes']['shared'] == 1);
+	Ti.API.debug("Shared: "+ shared)
 
 	var row = Titanium.UI.createTableViewRow({
 		id : folderId,
@@ -239,7 +248,7 @@ function createFolderRow(data) {
 	})
 
 	var icon = Ti.UI.createImageView({
-		image : (shared) ? './images/folder_shared.png' : './images/folder.png',
+		image : (shared) ? '/images/folder_shared.png' : '/images/folder.png',
 		width : 32,
 		height : 32,
 		left : 2
@@ -266,6 +275,7 @@ function createFolderRow(data) {
 function createFileRow(data) {
 	var row = Titanium.UI.createTableViewRow({
 		id : data['@attributes']['id'],
+		fileName : data['@attributes']['file_name'],
 		hasChild : false,
 		touchEnabled : true,
 		isFolder : false
@@ -310,22 +320,10 @@ function dump_files() {
 		"params[]" : "simple"
 	}, function(data) {
 		var xmlDoc = Ti.XML.parseString(data);
-		alert(xmlDoc.documentElement.getAttribute("rows"))
+		alert(xmlDoc.documentElement.getAttribute("rows"));
 	});
 }
 
-function createNewFolderDialog() {
-	var view = Ti.UI.createView({
-		width : '200dp',
-		height : '400dp',
-		backgroundColor : 'red',
-		top : 0
-	})
-
-	//return view;
-
-	win1.add(view);
-}
 
 /*
  *  UI extra stuff
@@ -334,23 +332,23 @@ function createNewFolderDialog() {
 function createCustomButton(icon_name, name) {
 	var button = Ti.UI.createView({
 		layout : 'vertical',
-		width : 65,
-		height : 55,
+		width : '36dp',
+		height : '36dp',
 		touchEnabled : true,
 		borderColor : '#ccc',
 		borderRadius : 6,
 		borderWidth : 1,
-		left : 5,
+		left : '30dp',
 		backgroundColor : '#F8F8F8'
-	})
+	});
 	//Ti.API.debug(icon_name)
 	var icon = Ti.UI.createImageView({
 		url : './images/buttons/' + icon_name + '.png',
-		width : 32,
-		height : 32,
-		top : 4,
-		left : 16
-	})
+		width : '22dp',
+		height : '22dp',
+		top : '6dp',
+		left : '6dp'
+	});
 
 	var label = Ti.UI.createLabel({
 		text : name,
@@ -360,10 +358,10 @@ function createCustomButton(icon_name, name) {
 		},
 		height : 18,
 		textAlign : 'center'
-	})
+	});
 
 	button.add(icon);
-	button.add(label);
+	//button.add(label);
 	button.show();
 	return button;
 }
