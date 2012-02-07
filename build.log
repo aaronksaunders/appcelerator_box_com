@@ -6,7 +6,7 @@ Logfile initialized
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.003711 seconds on emulator to get ready
+[DEBUG] waited 0.003147 seconds on emulator to get ready
 [DEBUG] ci.boxcomapp installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
@@ -28,4 +28,4 @@ Logfile initialized
 [INFO] Launching application ... box_com_app
 [TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=ci.boxcomapp/.Box_com_appActivity }
 
-[INFO] Relaunched box_com_app ... Application should be running.
+[INFO] Android Emulator has exited

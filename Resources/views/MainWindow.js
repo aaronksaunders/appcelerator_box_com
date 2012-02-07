@@ -20,13 +20,18 @@ MainWindow.prototype.createWindow = function() {
 	/// initializing globals
 	app.GlobalUpdate('current_folder', 0);
 	app.GlobalUpdate('history', []);
+	
+	var toolbarTop = Ti.Platform.displayCaps.platformHeight - 60;
 
 	var toolbarView = Ti.UI.createView({
 		width : '100%',
 		height : '40dp',
-		top : Ti.Platform.displayCaps.platformHeight - 60,
+		backgroundColor: 'red',
+		top : (app.globals.isAndroid) ? toolbarTop : '' + toolbarTop  + 'dp',
 		layout : 'horizontal'
 	})
+	
+	Ti.API.debug('-----***********-----. TOP: '+ (app.globals.isAndroid) ? Ti.Platform.displayCaps.platformHeight - 60 :  + (Ti.Platform.displayCaps.platformHeight - 60) + 'dp')
 
 	var tableHeader = Ti.UI.createView({
 		height : '25dp',
