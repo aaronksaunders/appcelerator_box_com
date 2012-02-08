@@ -1,1 +1,6 @@
 tmp
+build.log
+build/android/*
+!build/android/.gitignore
+build/iphone/*
+!build/iphone/.gitignore
