@@ -28,6 +28,12 @@ MainWindow.prototype.createWindow = function() {
 	});
 	that.window.orientationModes=[Titanium.UI.PORTRAIT];
 	
+	// Changing android's back button behavior
+	
+	that.window.addEventListener('android:back',function(){
+		that.controller.historyBack();
+	})
+	
 	var _top = 0;
 	
 	var labelTitle = Ti.UI.createLabel({
