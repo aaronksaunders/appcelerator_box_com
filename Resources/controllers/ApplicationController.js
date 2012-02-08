@@ -101,16 +101,37 @@ ApplicationController.prototype.viewFileContents = function(e) {
 				"file_id" : e.rowData.id,
 				"folder_id" : app.globals.current_folder
 			}, function(data) {
-				if(data.success) {					
+				if(data.success) {			
+					Ti.API.info('download');		
 					Ti.API.debug(JSON.stringify(data));
 					 var f = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,e.rowData.fileName);
             		f.write(data.responseData);
+            		
+            		// var webview = Ti.UI.createWebView({
+            			// url: f.nativePath
+            		// });
+            		// var button = Ti.UI.createButton({
+            			// title: 'X',
+            			// height: 50,
+            			// width: 50,
+            			// top: 0,
+            			// right: 0
+            		// });
+            		// button.addEventListener('click', function(e) {
+            			// webview.remove(button);
+            			// app.globals.mainWindow.window.remove(webview);
+            			// button = null;
+            			// webview = null;	
+// 
+            		// });
+            		// webview.add(button);
+            		// app.globals.mainWindow.window.add(webview);
+            		
             		Ti.API.debug('Native Path: '+f.nativePath)
 				} else {
 					Ti.API.debug(JSON.stringify(data))
 				}
-			});
-		
+			});		
 	}
 };
 /** ------------------------------------------------------------------------------
