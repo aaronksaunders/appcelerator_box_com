@@ -175,7 +175,7 @@ BOXModule.prototype.callMethod = function(method, params, callback) {
 					"success" : true,
 					"error" : null,
 					"responseText" : that.xhr.responseText,
-					"responseXML" : that.xhr.responseXML,
+					//"responseXML" : that.xhr.responseXML,
 					"responseData" : that.xhr.responseData
 				});
 			}
