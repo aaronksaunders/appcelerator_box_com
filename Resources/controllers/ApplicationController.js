@@ -44,7 +44,7 @@ ApplicationController.prototype.createFolder = function() {
 	var that = this;
 	var DialogWindow = require('/views/DialogWindow').DialogWindow;
 	var window = new DialogWindow();
-	
+
 	// display toolbar for data entry
 	window.create(app.globals.mainWindow.window, function(e) {
 		if(e.success === true) {
@@ -54,7 +54,7 @@ ApplicationController.prototype.createFolder = function() {
 				"share" : "0",
 				"parent_id" : app.globals.current_folder // CHECK  THIS, I BELIEVE WE NEED TO VERIFY THE ID
 			}, function(data) {
-				if(data.success){
+				if(data.success) {
 					that.dumpFolderContents(app.globals.current_folder);
 				} else {
 					alert('There was an error creating the folder. Please check that you entered a valid name.')
@@ -72,7 +72,6 @@ ApplicationController.prototype.refreshFolder = function() {
 	var that = this;
 	that.dumpFolderContents(app.globals.current_folder);
 };
-
 /** ------------------------------------------------------------------------------
  *
  * navigate up in folder history
@@ -96,42 +95,26 @@ ApplicationController.prototype.viewFileContents = function(e) {
 	if(e.rowData.isFolder)
 		that.dumpFolderContents(e.rowData.id);
 	else {
-		
+
 		BOXModule.callMethod("download", {
-				"file_id" : e.rowData.id,
-				"folder_id" : app.globals.current_folder
-			}, function(data) {
-				if(data.success) {			
-					Ti.API.info('download');		
-					Ti.API.debug(JSON.stringify(data));
-					 var f = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,e.rowData.fileName);
-            		f.write(data.responseData);
-            		
-            		// var webview = Ti.UI.createWebView({
-            			// url: f.nativePath
-            		// });
-            		// var button = Ti.UI.createButton({
-            			// title: 'X',
-            			// height: 50,
-            			// width: 50,
-            			// top: 0,
-            			// right: 0
-            		// });
-            		// button.addEventListener('click', function(e) {
-            			// webview.remove(button);
-            			// app.globals.mainWindow.window.remove(webview);
-            			// button = null;
-            			// webview = null;	
-// 
-            		// });
-            		// webview.add(button);
-            		// app.globals.mainWindow.window.add(webview);
-            		
-            		Ti.API.debug('Native Path: '+f.nativePath)
-				} else {
-					Ti.API.debug(JSON.stringify(data))
-				}
-			});		
+			"file_id" : e.rowData.id,
+			"folder_id" : app.globals.current_folder
+		}, function(data) {
+			if(data.success) {
+				Ti.API.debug(JSON.stringify(data));
+				var f = Ti.Filesystem.getFile(Ti.Filesystem.tempDirectory, e.rowData.fileName);
+				f.write(data.responseData);
+				Ti.API.debug('Native Path: ' + f.nativePath);
+				var DetailWindow = require('/views/DetailWindow').DetailWindow;
+				var window = new DetailWindow(that, {
+					"filename" : e.rowData.fileName,
+					"url" : f.nativePath
+				});
+				window.open();
+			} else {
+				Ti.API.debug(JSON.stringify(data))
+			}
+		});
 	}
 };
 /** ------------------------------------------------------------------------------
